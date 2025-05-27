@@ -27,6 +27,18 @@ if [[ -z "$1" || -z "$2" ]]; then
   exit 1
 fi
 
+# Check if Docker is running or installed
+if ! command -v docker >/dev/null 2>&1; then
+  echo "❌ Docker CLI not found. Please install Docker."
+  exit 1
+elif ! docker info >/dev/null 2>&1; then
+  echo "❌ Docker is not running or you don't have permission ..."
+  echo "    ... if you are on macOS try starting 'Docker.app'."
+  echo "    ... if you are on Linux try 'sudo systemctl start docker' or check your user group."
+  echo "    ... if you are on Windows ... good luck ;)"
+  exit 1
+fi
+
 SD_DEVICE="$1"
 OUTPUT_DIR="${2%/}"      # strip trailing slash if any
 DATE_STR=$(date +%Y-%m-%d)
