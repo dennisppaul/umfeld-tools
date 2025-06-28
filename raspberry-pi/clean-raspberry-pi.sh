@@ -1,5 +1,7 @@
-$USER_HOME=/home/umfeld
+USER_HOME=/home/umfeld
+
 sudo bash -c '
+
 rm -f $USER_HOME/.bash_history $USER_HOME/.zsh_history /root/.bash_history /root/.zsh_history
 rm -f /etc/ssh/ssh_host_*
 rm -f /etc/wpa_supplicant/wpa_supplicant.conf

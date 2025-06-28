@@ -3,14 +3,14 @@
 # NOTE requires about 12min on MacBook Pro M3
 
 # Check for arguments
-if [[ -z "$1" || -z "$2" ]]; then
-  echo "Usage: $0 <device path> <output directory>"
-  echo "Example: $0 /dev/disk4 ~/rpi-backups"
+if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+  echo "Usage: $0 <version-tag> <device path> <output directory>"
+  echo "Example: $0 v2.2.0 /dev/disk4 ~/rpi-backups"
   
   for dev in $(diskutil list | awk '/^\/dev\/disk/ {print $1}'); do
     # Pull out the “Device / Media Name” line, trim whitespace
     media_name=$(diskutil info "$dev" \
-      | awk -F: '/Device \/\ Media Name/ { gsub(/^[[:space:]]+|[[:space:]]+$/,"",$2); print $2 }')
+      | awk -F: '/Device \/ Media Name/ { gsub(/^[[:space:]]+|[[:space:]]+$/,"",$2); print $2 }')
   
     # Match “Built-In SDXC Reader” or “Built In SDXC Reader” (case-insensitive)
     if [[ "$media_name" =~ ^[Bb]uilt([- ]In[[:space:]]*SDXC[[:space:]]*Reader)$ ]]; then
@@ -27,6 +27,17 @@ if [[ -z "$1" || -z "$2" ]]; then
   exit 1
 fi
 
+# Parse parameters
+VERSION="$1"
+SD_DEVICE="$2"
+OUTPUT_DIR="${3%/}"      # strip trailing slash if any
+DATE_STR=$(date +%Y-%m-%d)
+IMAGE_NAME="umfeld-${VERSION}-rpi-$DATE_STR.img"
+IMAGE_PATH="$OUTPUT_DIR/$IMAGE_NAME"
+COMPRESSED_PATH="$IMAGE_PATH.gz"
+PISHRINK_REPO_DIR="$OUTPUT_DIR/PiShrink"
+PISHRINK_IMAGE="pishrink:latest"
+
 # Check if Docker is running or installed
 if ! command -v docker >/dev/null 2>&1; then
   echo "❌ Docker CLI not found. Please install Docker."
@@ -38,15 +49,6 @@ elif ! docker info >/dev/null 2>&1; then
   echo "    ... if you are on Windows ... good luck ;)"
   exit 1
 fi
-
-SD_DEVICE="$1"
-OUTPUT_DIR="${2%/}"      # strip trailing slash if any
-DATE_STR=$(date +%Y-%m-%d)
-IMAGE_NAME="umfeld-rpi-$DATE_STR.img"
-IMAGE_PATH="$OUTPUT_DIR/$IMAGE_NAME"
-COMPRESSED_PATH="$IMAGE_PATH.gz"
-PISHRINK_REPO_DIR="$OUTPUT_DIR/PiShrink"
-PISHRINK_IMAGE="pishrink:latest"
 
 # Check if device exists
 if [[ ! -e "$SD_DEVICE" ]]; then
