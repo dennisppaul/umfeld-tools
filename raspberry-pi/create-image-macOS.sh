@@ -77,6 +77,10 @@ if [[ "$confirm" != "y" ]]; then
   exit 1
 fi
 
+# Start timer
+start_time=$(date +%s)
+echo "> Start time: $(date +%Y-%m-%d\ %H:%M:%S)"
+
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
@@ -118,7 +122,7 @@ fi
 # 4. Run PiShrink (in-place) from within $OUTPUT_DIR
 echo "✂️  Shrinking image with PiShrink (Docker)..."
 pushd "$OUTPUT_DIR" >/dev/null
-docker run --rm --privileged -v "$(pwd)":/workdir:rw "$PISHRINK_IMAGE" "$IMAGE_NAME" || {
+docker run --rm --privileged -v "$(pwd)":/workdir:rw "$PISHRINK_IMAGE" -vr "$IMAGE_NAME" || {
   echo "❌ PiShrink failed. Proceeding with unshrunk image."
 }
 popd >/dev/null
@@ -128,6 +132,15 @@ popd >/dev/null
 # Compress image
 echo "Compressing image..."
 gzip "$IMAGE_PATH"
+
+# End timer
+end_time=$(date +%s)
+echo "> End time  : $(date +%Y-%m-%d\ %H:%M:%S)"
+
+duration=$((end_time - start_time))
+minutes=$((duration / 60))
+seconds=$((duration % 60))
+printf "> Duration  : %d minutes and %d seconds\n" "$minutes" "$seconds"
 
 # Done
 echo "✅ Backup complete: $COMPRESSED_PATH"
