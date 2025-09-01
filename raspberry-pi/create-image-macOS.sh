@@ -147,4 +147,4 @@ printf "> Duration  : %d minutes and %d seconds\n" "$minutes" "$seconds"
 # Done
 echo "✅ Backup complete: $COMPRESSED_PATH"
 echo "You can now flash it using Raspberry Pi Imager or:"
-echo "    sudo dd if=$COMPRESSED_PATH of=/dev/rdiskX bs=4m"
+echo "    gzcat "$COMPRESSED_PATH" | sudo dd of=/dev/rdiskX bs=4m status=progress"
