@@ -2,10 +2,13 @@
 
 # NOTE requires about 12min on MacBook Pro M3
 
+# flash image with Raspberry Pi Imager or with CLI:
+# $ gzcat ./umfeld-v2.4.0-rpi-2025-09-10.img.gz | sudo dd of=/dev/rdiskX bs=4m status=progress
+
 # Check for arguments
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
   echo "Usage: $0 <version-tag> <device path> <output directory>"
-  echo "Example: $0 v2.2.0 /dev/disk4 ~/rpi-backups"
+  echo "Example: $0 v2.4.0 /dev/disk4 ~/rpi-backups"
   
   for dev in $(diskutil list | awk '/^\/dev\/disk/ {print $1}'); do
     # Pull out the “Device / Media Name” line, trim whitespace

@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# example: ./tag-all.zsh -t v2.2.2
+# example: ./tag-repositories.sh -t v2.2.2
 
 # Helper function to print usage
 usage() {
