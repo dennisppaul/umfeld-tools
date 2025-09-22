@@ -1,10 +1,12 @@
 #!/bin/zsh
 set -euo pipefail
 
+echo "run script from 'umfeld-arduino' repository"
+
 # config
 UMF_PREFIX="umfeld/cores/sdl/umfeld"
 UMF_SUBTREE="umfeld-upstream"
-UMF_BRANCH="${UMF_BRANCH:-main}"   # allow override: UMF_BRANCH=dev ./script.sh
+UMF_BRANCH="${UMF_BRANCH:-main}"   # allow override: UMF_BRANCH=dev ./update-umfeld-arduino-subtree-repositories.sh
 
 # detect host repo + branch
 UMF_REPO=$(git rev-parse --show-toplevel 2>/dev/null || true)
