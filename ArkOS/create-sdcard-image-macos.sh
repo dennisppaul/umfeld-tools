@@ -1,20 +1,19 @@
 #!/bin/zsh
-# backup-sd-perfect.sh — Make a perfect byte-for-byte image of an SD card (macOS), then gzip it.
-# Usage:
-#   ./backup-sd-perfect.sh <version-tag> <device path> <output dir>
-# Example:
-#   ./backup-sd-perfect.sh v1.0.0 /dev/disk4 ~/sd-backups
+# Make a perfect byte-for-byte image of an SD card (macOS), then gzip it.
 #
 # Notes:
-# - Copies the ENTIRE card, exactly. Destination cards must be >= source size if you clone it back.
-# - Use /dev/rdiskX (raw) for speed. We unmount before imaging.
+# - copies the ENTIRE card, exactly
+# - destination cards must be >= source card size when cloning it back
+# - script unmounts SDCard before imaging
+# - script uses /dev/rdiskX (raw) for speed
+# - on macOS device paths ( e.g SDCards, SSD, ... ) can found with `diskutil list physical`
 
 set -euo pipefail
 
 # --- Args ---------------------------------------------------------------------
 if [[ $# -ne 3 ]]; then
   echo "Usage: $0 <version-tag> <device path> <output dir>"
-  echo "Example: $0 v1.0.0 /dev/disk4 ~/sd-backups"
+  echo "Example: $0 v1.0.0 /dev/disk18 ~/sd-backups"
   echo
   echo "Tip: Check your SD device with:  diskutil list physical"
   exit 1
